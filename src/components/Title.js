@@ -14,7 +14,7 @@ export default function Title() {
       </Typography>
       <Typography variant="body2">
         <b>
-          *Cuando se cambia un jugador los nuevos valores se almacenan en el
+          *Cuando se modifica un jugador los nuevos valores se almacenan en el
           navegador
         </b>
       </Typography>

@@ -32,14 +32,11 @@ function numeroAleatorio(min, max) {
 }
 
 function EditToolbar(props) {
-  const { setPlayers, setRowModesModel } = props;
+  const { setPlayers, setRowModesModel, players } = props;
 
   const handleClick = () => {
     const id = numeroAleatorio(100, 100000);
-    setPlayers((oldRows) => [
-      ...oldRows,
-      { id, nombre: "", value: 0, isNew: true },
-    ]);
+    setPlayers([...players, { id, nombre: "", value: 0, isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: "nombre" },
@@ -177,30 +174,28 @@ export default function TableTierList({ players, setPlayers }) {
 
   return (
     <Box sx={{ display: "flex", justifyContent: "center", padding: 3 }}>
-    
-        <DataGrid
-          rows={players}
-          columns={columns}
-          initialState={{
-            pagination: {
-              paginationModel: {
-                pageSize: 15,
-              },
+      <DataGrid
+        rows={players}
+        columns={columns}
+        initialState={{
+          pagination: {
+            paginationModel: {
+              pageSize: 15,
             },
-          }}
-          pageSizeOptions={[15]}
-          rowModesModel={rowModesModel}
-          onRowModesModelChange={handleRowModesModelChange}
-          onRowEditStop={handleRowEditStop}
-          processRowUpdate={processRowUpdate}
-          slots={{
-            toolbar: EditToolbar,
-          }}
-          slotProps={{
-            toolbar: { setPlayers, setRowModesModel },
-          }}
-        />
-
+          },
+        }}
+        pageSizeOptions={[15]}
+        rowModesModel={rowModesModel}
+        onRowModesModelChange={handleRowModesModelChange}
+        onRowEditStop={handleRowEditStop}
+        processRowUpdate={processRowUpdate}
+        slots={{
+          toolbar: EditToolbar,
+        }}
+        slotProps={{
+          toolbar: { setPlayers, setRowModesModel, players },
+        }}
+      />
     </Box>
   );
 }

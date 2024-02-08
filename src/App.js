@@ -1,10 +1,10 @@
 import "./App.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import TableTierList from "./components/TableTierlist";
 import CalculateResult from "./components/CalculateResult";
 import Title from "./components/Title";
 import { Box } from "@mui/material";
-const initialPlayers = [
+const defaultPlayers = [
   { id: 1, nombre: "Suchi", value: 2 },
   { id: 2, nombre: "Ari", value: 1.9 },
   { id: 3, nombre: "Kevin", value: 1.75 },
@@ -21,10 +21,25 @@ const initialPlayers = [
 //{ id: 11, nombre: "+ 1000 pesos para el team", value: 0.6 },
 
 function App() {
-  const [players, setPlayers] = useState(initialPlayers);
+  const storagePlayers = localStorage.getItem("players");
+  const initialPlayers = JSON.parse(storagePlayers);
+
+  const [players, setPlayers] = useState([]);
+
+  useEffect(() => {
+    if (initialPlayers) {
+      setPlayers(initialPlayers);
+    } else {
+      setPlayers(defaultPlayers);
+    }
+  }, []);
 
   const changePlayers = (newPlayers) => {
-    setPlayers(newPlayers);
+    if (newPlayers) {
+      const jsonObjetos = JSON.stringify(newPlayers);
+      localStorage.setItem("players", jsonObjetos);
+      setPlayers(newPlayers);
+    }
   };
 
   return (
