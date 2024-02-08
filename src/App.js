@@ -1,7 +1,10 @@
 import "./App.css";
+import { useState } from "react";
 import TableTierList from "./components/TableTierlist";
 import CalculateResult from "./components/CalculateResult";
-const players = [
+import Title from "./components/Title";
+import { Box } from "@mui/material";
+const initialPlayers = [
   { id: 1, nombre: "Suchi", value: 2 },
   { id: 2, nombre: "Ari", value: 1.9 },
   { id: 3, nombre: "Kevin", value: 1.75 },
@@ -18,10 +21,31 @@ const players = [
 //{ id: 11, nombre: "+ 1000 pesos para el team", value: 0.6 },
 
 function App() {
+  const [players, setPlayers] = useState(initialPlayers);
+
+  const changePlayers = (newPlayers) => {
+    setPlayers(newPlayers);
+  };
+
   return (
-    <div className="App">
-      <TableTierList players={players} />
-      <CalculateResult players={players} />
+    <div>
+      <Title />
+      <Box
+        sx={{
+          display: "flex",
+          "@media(max-width: 700px)": {
+            flexDirection: "column",
+            alignItems: "center",
+          },
+        }}
+      >
+        <Box sx={{ flex: 1 }}>
+          <TableTierList players={players} setPlayers={changePlayers} />
+        </Box>
+        <Box sx={{ flex: 1 }}>
+          <CalculateResult players={players} />
+        </Box>
+      </Box>
     </div>
   );
 }

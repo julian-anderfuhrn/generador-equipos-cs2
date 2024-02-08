@@ -1,12 +1,26 @@
 import { useState } from "react";
-import { Box, Button, Card, Typography } from "@mui/material";
+import { Box, Button, Card, TextField, Typography } from "@mui/material";
 
 export default function CalculateResult({ players }) {
   const [equipos, setEquipos] = useState([]);
+  const [error, setError] = useState(null);
+  const [diffMax, setDiffMax] = useState(0.4);
 
   const calcularEquipos = () => {
-    console.log(calculateRandomTeamCombination(players));
-    setEquipos(calculateRandomTeamCombination(players));
+    if (typeof calculateRandomTeamCombination(players) === "string") {
+      setError(
+        "El numero de jugadores es impar o no se encuentran combinaciones con esa diferencia maxima"
+      );
+      setEquipos([]);
+    } else {
+      setError(null);
+      setEquipos(calculateRandomTeamCombination(players));
+    }
+  };
+
+  const handleDiffMaxChange = (event) => {
+    const newDiffMax = event.target.value;
+    setDiffMax(newDiffMax);
   };
 
   function combinations(array, size) {
@@ -27,7 +41,7 @@ export default function CalculateResult({ players }) {
       const sum1 = combination.reduce((acc, player) => acc + player.value, 0);
       const sum2 =
         players.reduce((acc, player) => acc + player.value, 0) - sum1;
-      return Math.abs(sum1 - sum2) <= 0.4;
+      return Math.abs(sum1.toFixed(3) - sum2.toFixed(3)) <= diffMax;
     });
 
     if (validCombinations.length === 0) {
@@ -45,44 +59,62 @@ export default function CalculateResult({ players }) {
   }
 
   return (
-    <Card>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+        paddingTop: 3,
+      }}
+    >
+      <TextField
+        label="Diferencia maxima entre equipos"
+        type="number"
+        sx={{ mb: 2 }}
+        value={diffMax}
+        onChange={handleDiffMaxChange}
+        inputProps={{
+          step: 0.01,
+        }}
+      />
       <Button variant="contained" onClick={calcularEquipos}>
         Armar equipos
       </Button>
       <Box sx={{ display: "flex", justifyContent: "center", gap: 5 }}>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Typography variant="h4">Equipo 1</Typography>
-          {equipos[0]?.map((element, index) => (
-            <>
-              <Typography>{element.nombre}</Typography>
-            </>
-          ))}
-          <Typography variant="body2">
-            Valor total:{" "}
-            {equipos[0]
-              ?.reduce((acum, element) => {
-                return acum + element.value;
-              }, 0)
-              .toFixed(2)}
-          </Typography>
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "column" }}>
-          <Typography variant="h4">Equipo 2</Typography>
-          {equipos[1]?.map((element, index) => (
-            <>
-              <Typography>{element.nombre}</Typography>
-            </>
-          ))}
-          <Typography variant="body2">
-            Valor total:{" "}
-            {equipos[1]
-              ?.reduce((acum, element) => {
-                return acum + element.value;
-              }, 0)
-              .toFixed(2)}
-          </Typography>
-        </Box>
+        {error && <Typography>{error}</Typography>}
+        {equipos.length > 0 && (
+          <>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography variant="h4">Equipo 1</Typography>
+              {equipos[0]?.map((element, index) => (
+                <Typography key={index}>{element.nombre}</Typography>
+              ))}
+              <Typography variant="body2">
+                Valor total:{" "}
+                {equipos[0]
+                  ?.reduce((acum, element) => {
+                    return acum + element.value;
+                  }, 0)
+                  .toFixed(2)}
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography variant="h4">Equipo 2</Typography>
+              {equipos[1]?.map((element, index) => (
+                <Typography key={index}>{element.nombre}</Typography>
+              ))}
+              <Typography variant="body2">
+                Valor total:{" "}
+                {equipos[1]
+                  ?.reduce((acum, element) => {
+                    return acum + element.value;
+                  }, 0)
+                  .toFixed(2)}
+              </Typography>
+            </Box>
+          </>
+        )}
       </Box>
-    </Card>
+    </Box>
   );
 }
