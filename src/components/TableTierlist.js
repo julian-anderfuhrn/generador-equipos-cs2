@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Card, Box, Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import {
   GridRowModes,
   DataGrid,
@@ -53,26 +53,20 @@ function EditToolbar(props) {
 }
 
 export default function TableTierList({ players, setPlayers }) {
-  const [rows, setRows] = useState([
-    { id: 1, nombre: "Suchi", value: 2 },
-    { id: 2, nombre: "Ari", value: 1.9 },
-    { id: 3, nombre: "Kevin", value: 1.75 },
-    // { id: 4, nombre: "Magic", value: 1.7 },
-    { id: 5, nombre: "Añeñan", value: 1.5 },
-    { id: 6, nombre: "Nico", value: 1.1 },
-    { id: 7, nombre: "Agus", value: 1 },
-    { id: 8, nombre: "Tomi", value: 0.85 },
-    { id: 4, nombre: "bot", value: 0.7 },
-    { id: 9, nombre: "Facu", value: 0.7 },
-    { id: 10, nombre: "Erik", value: 0.4 },
-  ]);
   const [rowModesModel, setRowModesModel] = useState({});
   const columns = [
-    { field: "nombre", headerName: "Nombre", flex: 1, editable: true },
+    {
+      field: "nombre",
+      headerName: "Nombre",
+      flex: 1,
+      editable: true,
+      minWidth: 130,
+    },
     {
       field: "value",
       headerName: "Nivel de jugador",
       flex: 1,
+      minWidth: 130,
       type: "number",
       editable: true,
     },
@@ -173,7 +167,7 @@ export default function TableTierList({ players, setPlayers }) {
   };
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center", padding: 3 }}>
+    <Box sx={{ padding: 3 }}>
       <DataGrid
         rows={players}
         columns={columns}
